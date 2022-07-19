@@ -1,0 +1,75 @@
+train_setting:
+  batch_size: 16
+  save_id: 'MHVA'
+  discripriton: 'the sampled num is 5'
+  load_path: ""
+  save_interval: 100
+  log_interval: 50
+  val_interval: 100
+  result_dir: "./save"
+  epochs_per_increment: 100
+  img_zise: [360,640]
+  optimizer:
+    name: Adam
+    parameters:
+      lr: 0.0001
+  lr_scheduler:
+    name: StepLR
+    parameters:
+      step_size: 300
+      gamma: 0.7
+
+loss_parameters:
+  logit_weight: 3
+  curve_weight: 5
+  lower_weight: 2
+  upper_weight: 2
+model_parameters:
+  feature_size: [12,20]
+  aux_loss: True
+  res_dims: [64,128,256,512]
+  layers: [1,2,2,2]
+  row_layer: 1
+  col_layer: 1
+  vt_layer: 2
+  hidden_dim: 36
+  frame_num: 5
+  num_queries: 7
+  pos_type: 'sine'
+  nheads: 2
+  dropout: 0.1
+  dim_feedforward: 128
+  mlp_layers: 3
+dataset:
+  train:
+    parameters:
+      dataset: 'tusimple'
+      normalize: True
+      split: 'train+val'
+      img_size: [360, 640]
+      aug_chance:  0.9090909090909091
+      augmentations:
+        - name: Affine
+          parameters:
+            rotate: !!python/tuple [ -10, 10 ]
+        - name: HorizontalFlip
+          parameters:
+            p: 0.5
+        - name: CropToFixedSize
+          parameters:
+            width: 1152
+            height: 648
+  val:
+    parameters:
+      augmentations: []
+      normalize: True
+      split: 'val'
+      img_size: [360, 640]
+      aug_chance: 1.
+  test:
+    parameters:
+      augmentations: [ ]
+      normalize: True
+      split: 'test'
+      img_size: [ 360, 640 ]
+      aug_chance: 1.
